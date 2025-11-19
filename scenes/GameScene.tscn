@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=3 uid="uid://dqw8k3n7h9pm5"]
+
+[ext_resource type="Script" path="res://scripts/GameScene.gd" id="1_game"]
+[ext_resource type="Script" path="res://scripts/CameraController.gd" id="2_camera"]
+[ext_resource type="PackedScene" uid="uid://c8vqn7h8ry4m2" path="res://scenes/UI/HUD.tscn" id="3_hud"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/tileset_atlas.png" id="4_tileset"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1"]
+texture = ExtResource("4_tileset")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_1"]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_1")
+
+[node name="GameScene" type="Node2D"]
+script = ExtResource("1_game")
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_1")
+format = 2
+layer_0/name = "Ground"
+layer_0/tile_data = PackedInt32Array()
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(4096, 4096)
+script = ExtResource("2_camera")
+
+[node name="UnitsContainer" type="Node2D" parent="."]
+
+[node name="SelectionBox" type="ColorRect" parent="."]
+visible = false
+offset_right = 100.0
+offset_bottom = 100.0
+color = Color(0, 1, 0, 0.3)
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[connection signal="spawn_unit_requested" from="HUD" to="." method="_on_hud_spawn_unit_requested"]
+[connection signal="behavior_changed" from="HUD" to="." method="_on_hud_behavior_changed"]
+[connection signal="save_requested" from="HUD" to="." method="_on_hud_save_requested"]
+[connection signal="menu_requested" from="HUD" to="." method="_on_hud_menu_requested"]
